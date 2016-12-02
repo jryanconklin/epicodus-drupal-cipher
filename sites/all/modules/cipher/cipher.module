@@ -22,9 +22,9 @@ function caesar_form() {
     $form['shift_value'] = array(
         '#title' => 'Shift Value',
         '#type' => 'textfield',
-        '#attributes' => array('placeholder' => t('Enter Number Between 1 and 25 to Shift By')),
+        '#attributes' => array('placeholder' => t('Enter Number Between 1 and 25')),
         '#required' => TRUE,
-        '#element_validate' => array('element_validate_number', 'element_validate_range'),
+        '#element_validate' => array('element_validate_integer_positive', 'element_validate_range'),
     );
 
     $form['shift_direction'] = array(
@@ -43,6 +43,7 @@ function caesar_form() {
         '#rows' => 3,
         '#resizable' => FALSE,
         '#maxlength' => 255,
+        '#element_validate' => array('element_validate_sanitize'),
     );
 
     $form['submit'] = array(
@@ -71,6 +72,22 @@ function element_validate_direction($element) {
     }
 }
 
+function element_validate_sanitize($element) {
+
+    $valid_punctuation = array(".", "!", "?", ",", " ");
+    $alphabet = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z');
+
+    $filter_punctuation = $element['#value'];
+    $filter_punctuation = str_replace($alphabet, "", $filter_punctuation);
+    $filter_punctuation = str_split($filter_punctuation);
+
+    foreach($filter_punctuation as $punctuation) {
+        if (!in_array($punctuation, $valid_punctuation)) {
+            form_error($element, t('Valid Punctuation Only: Periods, Exclamation, Question, Comma or Space'));
+        }
+    }
+}
+
 // Form Submit Function for caeser form - process login and redirects to success page on button click
 function caesar_form_submit($form, &$form_state) {
 
@@ -78,8 +95,11 @@ function caesar_form_submit($form, &$form_state) {
     $alphabet = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z');
 
     $shift_value = $form_state['values']['shift_value'];
+    $shift_value = filter_var($shift_value, FILTER_SANITIZE_STRING);
     $shift_direction = $form_state['values']['shift_direction'];
+    $shift_direction = filter_var($shift_direction, FILTER_SANITIZE_STRING);
     $original_phrase = $form_state['values']['phrase'];
+    $original_phrase = filter_var($original_phrase, FILTER_SANITIZE_STRING);
 
 //simplify direction
     $direction = strtolower($shift_direction);

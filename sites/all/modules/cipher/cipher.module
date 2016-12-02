@@ -47,12 +47,34 @@ function caesar_form() {
     return $form;
 }
 
-// Form Submit Function for caeser form - redirects to success page on button click
+// Form Submit Function for caeser form - process login and redirects to success page on button click
 function caesar_form_submit($form, &$form_state) {
+
+    $shift_value = $form_state['values']['shift_value'];
+    $shift_direction = $form_state['values']['shift_direction'];
+    $original_phrase = $form_state['values']['phrase'];
+
+//create the letters array from the original phrase
+
+// for each item in the letters single letter array
+
+// return key position of letter in alphabet array
+
+//if shift position is right, add the shift value and push the new letter from the alphabet array to a caesar_phrase array.
+
+//if the shift position is left, subtract the shift value and push the new letter from the alphabet array to a caesar_phrase array.
+
+    $caesar_phrase = '';
+
+    $_SESSION['original_phrase'] = $original_phrase;
+    $_SESSION['caesar_phrase'] = $caesar_phrase;
+
     $form_state['redirect'] = 'caesar_success_page';
 }
 
 // Success View for Caesar Form
 function caesar_success() {
-    return 'Success!';
+    $original_phrase = $_SESSION['original_phrase'];
+    $caesar_phrase = $_SESSION['caesar_phrase'];
+    return 'Keep it secret, keep it safe! Here is your translated phrase ' . $caesar_phrase . ' from the original version of ' . $original_phrase . '.';
 }

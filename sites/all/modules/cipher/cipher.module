@@ -8,9 +8,16 @@ function cipher_menu() {
         'access callback' => TRUE, //Give all users access
         'type' => MENU_NORMAL_ITEM, //Menu Item Type
     );
+    $items['caesar_success_page'] = array(
+        'title' => 'You Got This!',
+        'page callback' => 'caesar_success',
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    );
     return $items;
 }
 
+//Function to Build Out the Form - Accessed via the Callback Function on the 'caesar' route
 function caesar_form() {
     $form['shift_value'] = array(
         '#title' => 'Shift Value',
@@ -38,4 +45,14 @@ function caesar_form() {
     );
 
     return $form;
+}
+
+// Form Submit Function for caeser form - redirects to success page on button click
+function caesar_form_submit($form, &$form_state) {
+    $form_state['redirect'] = 'caesar_success_page';
+}
+
+// Success View for Caesar Form
+function caesar_success() {
+    return 'Success!';
 }

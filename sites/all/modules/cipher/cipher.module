@@ -22,20 +22,24 @@ function caesar_form() {
     $form['shift_value'] = array(
         '#title' => 'Shift Value',
         '#type' => 'textfield',
-        '#attributes' => array('placeholder' => t('Enter Shift Value')),
+        '#attributes' => array('placeholder' => t('Enter Number Between 1 and 25 to Shift By')),
+        '#required' => TRUE,
+        '#element_validate' => array('element_validate_number', 'element_validate_range'),
     );
 
     $form['shift_direction'] = array(
         '#title' => 'Shift Direction',
         '#type' => 'textfield',
-        '#attributes' => array('placeholder' => t('Enter Shift Direction')),
-
+        '#attributes' => array('placeholder' => t('Enter Right or Left Shift Direction')),
+        '#required' => TRUE,
+        '#element_validate' => array('element_validate_direction'),
     );
 
     $form['phrase'] = array(
         '#title' => 'Phrase',
         '#type' => 'textfield',
         '#attributes' => array('placeholder' => t('Enter Your Phrase')),
+        '#required' => TRUE,
 
     );
 
@@ -45,6 +49,24 @@ function caesar_form() {
     );
 
     return $form;
+}
+
+function element_validate_range($element) {
+    if ($element['#value'] > 25 || $element['#value'] < 1 ) {
+        form_error($element, t('Please Enter a Number Between 1 and 25.'));
+    }
+}
+
+function element_validate_direction($element) {
+
+    $valid_directions = array('RIGHT', 'LEFT');
+
+    $direction = strtoupper($element['#value']);
+    $direction = trim($direction);
+
+    if (!in_array($direction, $valid_directions)) {
+        form_error($element, t('Please Enter Right or Left.'));
+    }
 }
 
 // Form Submit Function for caeser form - process login and redirects to success page on button click
@@ -83,7 +105,7 @@ function caesar_form_submit($form, &$form_state) {
         } else {
             if ($cipher_key < 0) {
                 $cipher_key = $cipher_key + 26;
-            } elseif($cipher_key > 26) {
+            } elseif ($cipher_key > 26) {
                 $cipher_key = $cipher_key - 26;
             } else {
                 $cipher_key = $cipher_key;
@@ -104,5 +126,5 @@ function caesar_form_submit($form, &$form_state) {
 function caesar_success() {
     $original_phrase = $_SESSION['original_phrase'];
     $caesar_phrase = $_SESSION['caesar_phrase'];
-    return 'Keep it secret, keep it safe! Here is your translated phrase ' . $caesar_phrase . ' from the original version of ' . $original_phrase . '.';
+    return 'Keep it secret, keep it safe! Here is your translated phrase \'' . $caesar_phrase . '\' from the original version of \'' . $original_phrase . '.\'';
 }

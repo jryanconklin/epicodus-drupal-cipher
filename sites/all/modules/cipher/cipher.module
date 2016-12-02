@@ -37,10 +37,12 @@ function caesar_form() {
 
     $form['phrase'] = array(
         '#title' => 'Phrase',
-        '#type' => 'textfield',
-        '#attributes' => array('placeholder' => t('Enter Your Phrase')),
+        '#type' => 'textarea',
+        '#attributes' => array('placeholder' => t('Enter Your Phrase (Max 255 Characters)')),
         '#required' => TRUE,
-
+        '#rows' => 3,
+        '#resizable' => FALSE,
+        '#maxlength' => 255,
     );
 
     $form['submit'] = array(
@@ -100,7 +102,7 @@ function caesar_form_submit($form, &$form_state) {
             $cipher_key = $key - $shift_value;
         }
         // if the item in the letters single letter array is an empty string, push the empty string to the array.
-        if ($letter == ' ') {
+        if (!in_array($letter, $alphabet)) {
             array_push($caesar_array, $letter);
         } else {
             if ($cipher_key < 0) {

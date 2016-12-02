@@ -50,21 +50,49 @@ function caesar_form() {
 // Form Submit Function for caeser form - process login and redirects to success page on button click
 function caesar_form_submit($form, &$form_state) {
 
+//validation alphabet
+    $alphabet = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
+
     $shift_value = $form_state['values']['shift_value'];
     $shift_direction = $form_state['values']['shift_direction'];
     $original_phrase = $form_state['values']['phrase'];
 
+//simplify direction
+    $direction = strtoupper($shift_direction);
+    $direction = trim($direction);
+
 //create the letters array from the original phrase
+    $letters = strtoupper($original_phrase);
+    $letters = str_split($letters);
+
+//create holding array for loop values
+    $caesar_array = array();
 
 // for each item in the letters single letter array
+    foreach ($letters as $letter) {
+        $key = array_search($letter, $alphabet);
 
-// return key position of letter in alphabet array
+        if ($direction == 'RIGHT') {
+            $cipher_key = $key + $shift_value;
+        } elseif($direction == 'LEFT') {
+            $cipher_key = $key - $shift_value;
+        }
+        // if the item in the letters single letter array is an empty string, push the empty string to the array.
+        if ($letter == ' ') {
+            array_push($caesar_array, $letter);
+        } else {
+            if ($cipher_key < 0) {
+                $cipher_key = $cipher_key + 26;
+            } elseif($cipher_key > 26) {
+                $cipher_key = $cipher_key - 26;
+            } else {
+                $cipher_key = $cipher_key;
+            }
+            array_push($caesar_array, $alphabet[$cipher_key]);
+        }
+    }
 
-//if shift position is right, add the shift value and push the new letter from the alphabet array to a caesar_phrase array.
-
-//if the shift position is left, subtract the shift value and push the new letter from the alphabet array to a caesar_phrase array.
-
-    $caesar_phrase = '';
+    $caesar_phrase = implode('', $caesar_array);
 
     $_SESSION['original_phrase'] = $original_phrase;
     $_SESSION['caesar_phrase'] = $caesar_phrase;

@@ -1,0 +1,5 @@
+name = Cipher
+description = Our Ciphers!
+package = Ciphers
+core = 7.x
+files[] = cipher.module

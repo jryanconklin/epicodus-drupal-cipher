@@ -1,0 +1,41 @@
+<?php
+
+function cipher_menu() {
+    $items['caesar'] = array(
+        'title' => 'Caesar Cipher', //Content Title
+        'page callback' => 'drupal_get_form', //Callback function for view - uses built in drupal function to return form as callback.
+        'page arguments' => array('caesar_form'),
+        'access callback' => TRUE, //Give all users access
+        'type' => MENU_NORMAL_ITEM, //Menu Item Type
+    );
+    return $items;
+}
+
+function caesar_form() {
+    $form['shift_value'] = array(
+        '#title' => 'Shift Value',
+        '#type' => 'textfield',
+        '#attributes' => array('placeholder' => t('Enter Shift Value')),
+    );
+
+    $form['shift_direction'] = array(
+        '#title' => 'Shift Direction',
+        '#type' => 'textfield',
+        '#attributes' => array('placeholder' => t('Enter Shift Direction')),
+
+    );
+
+    $form['phrase'] = array(
+        '#title' => 'Phrase',
+        '#type' => 'textfield',
+        '#attributes' => array('placeholder' => t('Enter Your Phrase')),
+
+    );
+
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => 'Submit',
+    );
+
+    return $form;
+}
